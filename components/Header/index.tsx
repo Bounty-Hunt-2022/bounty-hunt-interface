@@ -5,7 +5,7 @@ import { getEllipsisTxt } from "../../utils";
 import Button from "../Button";
 
 const Header = () => {
-  const { account, connect, disconnect } = useWallet();
+  const { account, connect, disconnect,chainId,provider } = useWallet();
   return (
     <div className="fixed top-0 left-0 flex items-center justify-between w-full px-4 py-2 border-b bg-secondary-200 border-b-primary-400">
       <Link href="/">
@@ -30,9 +30,22 @@ const Header = () => {
       >
         {account ? getEllipsisTxt(account) : "Connect Wallet"}
       </button>
-      <Link href="/createProfile">
+
+      {
+        chainId&&chainId !== Number("0x13881")&&
+        <Button onClick={()=>{
+        if (chainId !== Number("0x13881")) {
+                provider?.request({
+                  method: "wallet_switchEthereumChain",
+                  params: [{ chainId: "0x13881" }],
+                });
+              }
+      }} className="bg-red-500 border-red-500 mr-1">
+        Switch To Mumbai
+      </Button>}
+      {chainId&&chainId === Number("0x13881")&&<Link href="/createProfile">
         <Button>Create a Profile</Button>
-      </Link>
+      </Link>}
     </div>
   );
 };

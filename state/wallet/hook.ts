@@ -93,12 +93,13 @@ const useWallet = () => {
 
       // https://docs.ethers.io/v5/concepts/best-practices/#best-practices--network-changes
       const handleChainChanged = (_hexChainId: string) => {
+        console.log("chainChanged", _hexChainId);
         window.location.reload();
       };
 
       const handleDisconnect = (error: { code: number; message: string }) => {
         // eslint-disable-next-line no-console
-        console.log("disconnect", error);
+        console.log("disconnect why", error);
         disconnect();
       };
 

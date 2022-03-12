@@ -22,7 +22,7 @@ const QUERY = `{
 
 // @ts-ignore TYPE NEEDS FIXING
 const fetcher = (query) =>
-  request("https://api.thegraph.com/subgraphs/name/jds-23/bunty", query);
+  request("https://api.thegraph.com/subgraphs/name/jds-23/bounty-maker-v2", query);
 
 // Returns ratio of bounties
 export function useBounties(): {
