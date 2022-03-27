@@ -1,5 +1,16 @@
 {
   "/_app": "pages/_app.js",
+  "/api/hello": "pages/api/hello.js",
+  "/bounties": "pages/bounties.html",
+  "/bounty/[slug]": "pages/bounty/[slug].html",
+  "/createProfile": "pages/createProfile.html",
+  "/creator/bounties": "pages/creator/bounties.html",
+  "/creator/bounty/[slug]": "pages/creator/bounty/[slug].html",
+  "/creator": "pages/creator.html",
+  "/hunter/[slug]": "pages/hunter/[slug].html",
+  "/": "pages/index.html",
+  "/uploadImage": "pages/uploadImage.html",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js"
+  "/_document": "pages/_document.js",
+  "/404": "pages/404.html"
 }
