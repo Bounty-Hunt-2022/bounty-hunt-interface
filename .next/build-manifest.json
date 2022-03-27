@@ -30,15 +30,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/bounties": [
+    "/uploadImage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/bounties.js"
-    ],
-    "/createProfile": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/createProfile.js"
+      "static/chunks/pages/uploadImage.js"
     ]
   },
   "ampFirstPages": []

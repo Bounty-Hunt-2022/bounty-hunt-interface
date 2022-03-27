@@ -17,12 +17,19 @@ const QUERY = `{
     uri
     tokenLimit
     deadline
+    admin
+    winners{
+      id
+      hunter{
+        id
+      }
+    }
   }
 }`;
 
 // @ts-ignore TYPE NEEDS FIXING
 const fetcher = (query) =>
-  request("https://api.thegraph.com/subgraphs/name/jds-23/bounty-maker-v2", query);
+  request("https://api.thegraph.com/subgraphs/name/jds-23/bounty-maker", query);
 
 // Returns ratio of bounties
 export function useBounties(): {
@@ -36,8 +43,10 @@ export function useBounties(): {
   type: string;
   image: string;
   active: boolean;
+  admin: string;
 }[] {
   const { data } = useSWR(QUERY, fetcher);
+
   return data?.bounties?.map(
     (bounty: {
       id: string;
@@ -46,15 +55,17 @@ export function useBounties(): {
       uri: string;
       tokenLimit: string;
       deadline: string;
+      admin: string;
     }) => {
       const reward = bounty.rewards.reduce(
         (partialSum, a) => partialSum + parseFloat(a),
         0
       );
       return {
-        ...metadata[bounty.id],
+        ...metadata[bounty.admin],
         id: bounty.id,
         active: bounty.active,
+        admin: bounty.admin,
         reward,
         tokenLimit: parseFloat(bounty.tokenLimit),
         deadline: bounty.deadline,
@@ -62,6 +73,27 @@ export function useBounties(): {
       };
     }
   );
+}
+
+export function useAdminBounties(account: string | undefined | null): {
+  id: string;
+  reward: number;
+  tokenLimit: number;
+  deadline: string;
+  uri: string;
+  company: string;
+  title: string;
+  type: string;
+  image: string;
+  active: boolean;
+  admin: string;
+}[] {
+  const bounties = useBounties();
+  return account
+    ? bounties?.filter(
+        (bounty) => bounty.admin.toLowerCase() === account.toLowerCase()
+      )
+    : [];
 }
 
 export function useBounty(id: string):
@@ -76,6 +108,8 @@ export function useBounty(id: string):
       title: string;
       type: string;
       image: string;
+      active: boolean;
+      admin: string;
     } {
   const { data } = useSWR(QUERY, fetcher);
   const bounty: {
@@ -85,6 +119,7 @@ export function useBounty(id: string):
     uri: string;
     tokenLimit: string;
     deadline: string;
+    admin: string;
   } = data?.bounties?.find(
     (bounty: {
       id: string;
@@ -93,6 +128,7 @@ export function useBounty(id: string):
       uri: string;
       tokenLimit: string;
       deadline: string;
+      admin: string;
     }) => bounty.id === id
   );
   if (bounty)
@@ -103,6 +139,8 @@ export function useBounty(id: string):
       tokenLimit: parseFloat(bounty.tokenLimit),
       deadline: bounty.deadline,
       uri: bounty.uri,
+      active: bounty.active,
+      admin: bounty.admin,
     };
   return undefined;
 }

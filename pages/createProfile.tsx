@@ -9,19 +9,17 @@ const CreateProfile = () => {
   const [record, setRecord] = useState("");
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { account } = useWallet();
+  const { account,web3Provider } = useWallet();
 
   // Add a stateful array at the top next to all the other useState calls
   const [mints, setMints] = useState<any[]>([]);
 
   // Add this function anywhere in your component (maybe after the mint function)
   const fetchMints = async () => {
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
-        // You know all this
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+    try {      
+        // const provider = new ethers.providers.Web3Provider(ethereum);
+        // const provider=web3Provider;
+        const signer = web3Provider.getSigner();
         const contract = new ethers.Contract(
           hunterDomainAddress,
           DomainMaker,
@@ -47,7 +45,7 @@ const CreateProfile = () => {
 
         console.log("MINTS FETCHED ", mintRecords);
         setMints(mintRecords);
-      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -70,10 +68,8 @@ const CreateProfile = () => {
       domain.length === 3 ? "0.5" : domain.length === 4 ? "0.3" : "0.1";
     console.log("Minting domain", domain, "with price", price);
     try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+  
+        const signer = web3Provider.getSigner();
         const contract = new ethers.Contract(
           hunterDomainAddress,
           DomainMaker,
@@ -111,7 +107,7 @@ const CreateProfile = () => {
         } else {
           alert("Transaction failed! Please try again");
         }
-      }
+
     } catch (error) {
       console.log(error);
     }
@@ -124,10 +120,8 @@ const CreateProfile = () => {
     setLoading(true);
     console.log("Updating domain", domain, "with record", record);
     try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+  
+        const signer = web3Provider.getSigner();
         const contract = new ethers.Contract(
           hunterDomainAddress,
           DomainMaker,
@@ -142,7 +136,7 @@ const CreateProfile = () => {
         setRecord("");
         setDomain("");
         setEditing(false);
-      }
+      
     } catch (error) {
       console.log(error);
     }

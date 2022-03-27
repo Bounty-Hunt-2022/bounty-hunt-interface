@@ -1,11 +1,11 @@
 {
-  "DVS": {
+  "0x40d5250d1ce81fdd1f0e0fb4f471e57aa0c1fad3": {
     "company": "Uniswap",
     "title": "Solve uniswap bug",
     "type": "Bounty",
     "image": "./Banner.jpg"
   },
-  "VVS": {
+  "0xd253edaf1b53a2e0e5e1b8021ba4937d21806dd3": {
     "company": "Router",
     "title": "DVS",
     "type": "Case Study",

@@ -43,7 +43,11 @@ const BountyCard = ({
         className="object-contain w-full rounded-md"
         src={image}
       />
-      <p className="font-semibold text-dark-500">{title}</p>
+      <p className="font-semibold text-dark-500">{company}--
+      <span className="text-sm">
+      {title}
+        </span>
+      </p>
       <div className="flex">
         <span className="m-0.5 px-1 bg-rose-200 text-rose-700 text-xs font-bold rounded-xl">
           {timeStamp < parseFloat(deadline) && active ? "Open" : "Closed"}
