@@ -44,6 +44,7 @@ const Hunter = () => {
 
   const fetchHunterMetadata = useCallback(async () => {
     if (address && isHunterDomain && typeof slug === "string") {
+      console.log(address);
       const nfts = await web3.alchemy.getNfts({
         owner: address,
         contractAddresses: [hunterDomainAddress],
