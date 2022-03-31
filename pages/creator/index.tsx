@@ -6,6 +6,10 @@ import BountyMaker from "../../constants/abis/BountyMaker.json";
 import { uuid } from "uuidv4";
 import Button from "../../components/Button";
 import { getEllipsisTxt } from "../../utils";
+import { jsonFile, storeFile } from "../../utils/storeFile";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 const regex = new RegExp("^[0-9,]*$");
 const regexNumber = new RegExp("^[0-9,]*$");
 const Creator = () => {
@@ -18,7 +22,9 @@ const Creator = () => {
   const [uri, setUri] = useState("");
   const [loading, setLoading] = useState(false);
   const [endTime, setEndTime] = useState("");
+  const [about, setAbout] = useState("");
   const [eligible, setEligile] = useState(false);
+  const [submissionLink, setSubmissionLink] = useState("");
 
   const { account, web3Provider, connect, disconnect, chainId, provider } =
     useWallet();
@@ -65,7 +71,10 @@ const Creator = () => {
         signer
       );
       //   setId(uuid());
-      const id = uuid();
+      // const id = uuid();
+      const res = await generateMetadata();
+      if (!res) return;
+      const id = res.cid;
       debugger;
       const tx = await contract.createBounty(
         id,
@@ -88,6 +97,17 @@ const Creator = () => {
       console.log(error);
     }
     setLoading(false);
+  };
+
+  const generateMetadata = async () => {
+    const data = jsonFile("metadata.json", {
+      about,
+      submissionLink,
+      id,
+    });
+    const res = await storeFile(data, "metadata.json");
+    if (res) return res;
+    return undefined;
   };
 
   return (
@@ -191,8 +211,30 @@ const Creator = () => {
           <span className="text-primary-500 mb-1 w-full text-xs">
             Separate Amount with comma space
           </span>
+          <input
+            className="my-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
+            type="text"
+            value={submissionLink}
+            placeholder="Submisson Link"
+            onChange={(e) => setSubmissionLink(e.target.value)}
+          />
+          <textarea
+            className="mt-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
+            value={about}
+            onChange={(e) => {
+              if (about.length <= 500) setAbout(e.target.value);
+            }}
+            placeholder="About (Markdown supported 📝)"
+          />
+          <span className="text-primary-500 mb-1 w-full text-xs">
+            {about.length}/500
+          </span>
+          <ReactMarkdown children={about} remarkPlugins={[remarkGfm]} />
+          <Button className="my-1" block={true} onClick={generateMetadata}>
+            Generate Metadata
+          </Button>
           <Button disabled={loading} block onClick={createBounty}>
-            {!loading ? "Create Bounty" : "Creating Bounty"}
+            {!loading ? "Create Bounty 🚀" : "Creating Bounty 🏗"}
           </Button>
         </div>
       )}

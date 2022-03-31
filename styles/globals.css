@@ -17,3 +17,58 @@ a {
   box-sizing: border-box;
   margin: 0;
 }
+.markdown-style h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #12957d;
+}
+.markdown-style h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #12957d;
+}
+.markdown-style h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #12957d;
+}
+.markdown-style h4 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #12957d;
+}
+.markdown-style a {
+  color: #12957d;
+  text-decoration: underline;
+  text-decoration-color: #12957d;
+}
+.markdown-style a:hover {
+  color: #0b594b;
+  text-decoration: underline;
+  text-decoration-color: #0b594b;
+}
+
+.markdown-style p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.markdown-style img {
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  width: 100%;
+  object-fit: contain;
+}

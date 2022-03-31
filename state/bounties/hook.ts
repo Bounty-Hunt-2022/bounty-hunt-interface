@@ -101,6 +101,7 @@ export function useBounty(id: string):
   | {
       id: string;
       reward: number;
+      rewards: number[];
       tokenLimit: number;
       deadline: string;
       uri: string;
@@ -131,16 +132,22 @@ export function useBounty(id: string):
       admin: string;
     }) => bounty.id === id
   );
-  if (bounty)
+  if (bounty) {
+    const reward = bounty.rewards.reduce(
+      (partialSum, a) => partialSum + parseFloat(a),
+      0
+    );
     return {
-      ...metadata[bounty.id],
+      ...metadata[bounty.admin],
       id: bounty.id,
-      reward: 0,
+      reward,
+      rewards: bounty.rewards.map((a) => parseFloat(a)),
       tokenLimit: parseFloat(bounty.tokenLimit),
       deadline: bounty.deadline,
       uri: bounty.uri,
       active: bounty.active,
       admin: bounty.admin,
     };
+  }
   return undefined;
 }

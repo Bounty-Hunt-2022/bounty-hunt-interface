@@ -1,7 +1,10 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import Button from "../../components/Button";
 import { useBounty } from "../../state/bounties/hook";
+import { retrieve } from "../../utils/storeFile";
 const imageStr =
   "https://superteam.fun/_next/image?url=https%3A%2F%2Fsuper-static-assets.s3.amazonaws.com%2F75e99297-73de-4946-ba6b-0ac603638793%2Fimages%2F1b3b7fef-bdd1-4b92-993e-c9f0676a995d.png&w=1920&q=80";
 
@@ -9,7 +12,20 @@ const Bounty = () => {
   const router = useRouter();
   const { slug } = router.query;
   const bounty = useBounty(slug as string);
-
+  const [metadata, setMetadata] = useState<any>();
+  console.log(bounty);
+  useEffect(() => {
+    if (typeof slug === "string") {
+      fetchMetadata(slug);
+    }
+  }, []);
+  const fetchMetadata = async (cid: string) => {
+    const res = await retrieve(cid);
+    setMetadata(res);
+  };
+  const deadline =
+    bounty?.deadline &&
+    new Date(parseFloat(bounty.deadline) * 1000).toUTCString();
   return (
     <div>
       <img
@@ -21,20 +37,30 @@ const Bounty = () => {
           <h1 className={"text-2xl font-bold text-primary-500 mb"}>
             {bounty?.title}
           </h1>
-          <p className={"text-sm text-black-500"}>
-            Deadline: Feb 10th 11:00pm IST{" "}
-          </p>
-          <p
-            className={
-              "text-lg text-black-500 mt-5 underline underline-offset-2 cursor-pointer"
-            }
-          >
-            Submit Your Bounty Here
-          </p>
+          <p className={"text-sm text-black-500"}>Deadline: {deadline} </p>
+          {metadata?.submissionLink && (
+            <a
+              target={"_blank"}
+              href={metadata.submissionLink}
+              className={
+                "text-lg text-black-500 mt-5 underline underline-offset-2 cursor-pointer"
+              }
+            >
+              Submit Your Bounty Here
+            </a>
+          )}
         </div>
-        <div
-          className="flex flex-col mt-3.5 md:mt-7
-"
+        <div className="flex markdown-style flex-col mt-3.5 md:mt-7">
+          {metadata?.about && (
+            <ReactMarkdown
+              children={metadata?.about}
+              remarkPlugins={[remarkGfm]}
+            />
+          )}
+        </div>
+
+        {/* <div
+          className="flex flex-col mt-3.5 md:mt-7"
         >
           <h1 className={"text-xl font-bold text-primary-500 mb"}>
             About the Bounty
@@ -63,8 +89,7 @@ const Bounty = () => {
         </div>
 
         <div
-          className="flex flex-col mt-3.5 md:mt-7
-"
+          className="flex flex-col mt-3.5 md:mt-7"
         >
           <h1 className={"text-xl font-bold text-primary-500 mb"}>
             Your Mission
@@ -153,11 +178,17 @@ const Bounty = () => {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center justify-center mt-3.5 md:mt-7">
-          <Button block className="max-w-xs">
-            Submit your Bounty Here{" "}
-          </Button>
+          {metadata?.submissionLink && (
+            <Button
+              onClick={() => window.open(metadata.submissionLink)}
+              block
+              className="max-w-xs"
+            >
+              Submit your Bounty Here{" "}
+            </Button>
+          )}
         </div>
       </div>
 

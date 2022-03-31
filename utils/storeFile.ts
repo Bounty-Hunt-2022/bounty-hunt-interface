@@ -41,3 +41,17 @@ export function makeGatewayURL(cid: string, path: string) {
 export function jsonFile(filename: string, obj: any) {
   return new File([JSON.stringify(obj)], filename);
 }
+export async function retrieve(cid: string) {
+  const url = makeGatewayURL(cid, "metadata.json");
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(
+      `error fetching metadata: [${res.status}] ${res.statusText}`
+    );
+  }
+  const metadata = await res.json();
+  // const gatewayURL = makeGatewayURL(cid, metadata.path)
+  // const uri = `ipfs://${cid}/${metadata.path}`
+  console.log(metadata);
+  return { ...metadata }; // request succeeded! do something with the response object here...
+}
