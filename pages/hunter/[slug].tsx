@@ -111,7 +111,7 @@ const Hunter = () => {
   useEffect(() => {
     getUserNft();
   }, [address, getUserNft]);
-  console.log(profileNft);
+  console.log(nfts);
   return (
     <div className="mx-4 mt-16 sm:mt-32 sm:mx-10 md:mx-40">
       {/* Hi {slug as string}, your address is: {address as string} */}

@@ -63,10 +63,11 @@ const Bounty = () => {
   };
 
   const setBountyWinners = async () => {
+    debugger;
     if (!web3Provider) return;
     if (typeof slug !== "string") return;
     if (addressCheck?.includes(false)) return;
-    if (bounty?.active) return;
+    if (!bounty?.active) return;
     setLoading(true);
     try {
       const signer = web3Provider.getSigner();
@@ -126,17 +127,15 @@ const Bounty = () => {
           </h1>
         </div>
       )}
-      {
-          eligible&&bounty&&!bounty.active&&(
-            <div className="flex flex-col items-center max-w-sm m-auto">
-            <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
-              Winners Declared
-            </h1>
-            </div>
-          )
-      }
+      {eligible && bounty && !bounty.active && (
+        <div className="flex flex-col items-center max-w-sm m-auto">
+          <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
+            Winners Declared
+          </h1>
+        </div>
+      )}
 
-      {eligible&&bounty?.active && (
+      {eligible && bounty?.active && (
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
             Set Winners Bounty
