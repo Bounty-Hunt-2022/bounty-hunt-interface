@@ -25,10 +25,108 @@ export interface generalInfo {
   twitter: string;
   portfolioLink: string;
 }
+const svgPartOne =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="270" height="270" fill="none"><path fill="url(#B)" d="M0 0h270v270H0z"/><defs><path d="M72.863 42.949c-.668-.387-1.426-.59-2.197-.59s-1.529.204-2.197.59l-10.081 6.032-6.85 3.934-10.081 6.032c-.668.387-1.426.59-2.197.59s-1.529-.204-2.197-.59l-8.013-4.721a4.52 4.52 0 0 1-1.589-1.616c-.384-.665-.594-1.418-.608-2.187v-9.31c-.013-.775.185-1.538.572-2.208a4.25 4.25 0 0 1 1.625-1.595l7.884-4.59c.668-.387 1.426-.59 2.197-.59s1.529.204 2.197.59l7.884 4.59a4.52 4.52 0 0 1 1.589 1.616c.384.665.594 1.418.608 2.187v6.032l6.85-4.065v-6.032c.013-.775-.185-1.538-.572-2.208a4.25 4.25 0 0 0-1.625-1.595L41.456 24.59c-.668-.387-1.426-.59-2.197-.59s-1.529.204-2.197.59l-14.864 8.655a4.25 4.25 0 0 0-1.625 1.595c-.387.67-.585 1.434-.572 2.208v17.441c-.013.775.185 1.538.572 2.208a4.25 4.25 0 0 0 1.625 1.595l14.864 8.655c.668.387 1.426.59 2.197.59s1.529-.204 2.197-.59l10.081-5.901 6.85-4.065 10.081-5.901c.668-.387 1.426-.59 2.197-.59s1.529.204 2.197.59l7.884 4.59a4.52 4.52 0 0 1 1.589 1.616c.384.665.594 1.418.608 2.187v9.311c.013.775-.185 1.538-.572 2.208a4.25 4.25 0 0 1-1.625 1.595l-7.884 4.721c-.668.387-1.426.59-2.197.59s-1.529-.204-2.197-.59l-7.884-4.59a4.52 4.52 0 0 1-1.589-1.616c-.385-.665-.594-1.418-.608-2.187v-6.032l-6.85 4.065v6.032c-.013.775.185 1.538.572 2.208a4.25 4.25 0 0 0 1.625 1.595l14.864 8.655c.668.387 1.426.59 2.197.59s1.529-.204 2.197-.59l14.864-8.655c.657-.394 1.204-.95 1.589-1.616s.594-1.418.609-2.187V55.538c.013-.775-.185-1.538-.572-2.208a4.25 4.25 0 0 0-1.625-1.595l-14.993-8.786z" fill="#fff"/></defs><defs><linearGradient id="B" x1="0" y1="0" x2="270" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="color-1-here"/><stop offset="1" stop-color="color-2-here" /></linearGradient></defs><text x="22.5" y="241" font-size="22" fill="#fff"  font-family="Plus Jakarta Sans,DejaVu Sans,Noto Color Emoji,Apple Color Emoji,sans-serif" font-weight="bold">';
+const svgPartTwo = "</text></svg>";
+
+function generatedNft(str: string) {
+  const colors = getColorFromArray(str);
+  return (
+    svgPartOne
+      .replace("color-1-here", colors[0])
+      .replace("color-2-here", colors[1]) +
+    str +
+    tld +
+    svgPartTwo
+  );
+}
+
+function getColorFromArray(str: string): string[] {
+  var colors1 = [
+    "#ee9ca7",
+    "#42275a",
+    "#bdc3c7",
+    "#de6262",
+    "#06beb6",
+    "#eb3349",
+    "#dd5e89",
+    "#56ab2f",
+    "#614385",
+    "#eecda3",
+    "#eacda3",
+    "#02aab0",
+    "#d66d75",
+    "#000428",
+    "#ddd6f3",
+    "#7b4397",
+    "#43cea2",
+    "#ba5370",
+    "#ff512f",
+    "#4568dc",
+    "#ec6f66",
+    "#ffd89b",
+    "#3a1c71",
+    "#4ca1af",
+    "#ff5f6d",
+    "#36d1dc",
+    "#c33764",
+    "#141e30",
+    "#ff7e5f",
+    "#ed4264",
+    "#2b5876",
+    "#ff9966",
+    "#aa076b",
+  ];
+  var colors2 = [
+    "#ffdde1",
+    "#734b6d",
+    "#2c3e50",
+    "#ffb88c",
+    "#48b1bf",
+    "#f45c43",
+    "#f7bb97",
+    "#a8e063",
+    "#516395",
+    "#ef629f",
+    "#d6ae7b",
+    "#00cdac",
+    "#e29587",
+    "#004e92",
+    "#faaca8",
+    "#dc2430",
+    "#185a9d",
+    "#f4e2d8",
+    "#dd2476",
+    "#b06ab3",
+    "#f3a183",
+    "#19547b",
+    "#d76d77",
+    "#c4e0e5",
+    "#ffc371",
+    "#5b86e5",
+    "#1d2671",
+    "#243b55",
+    "#feb47b",
+    "#ffedbc",
+    "#4e4376",
+    "#ff5e62",
+    "#61045f",
+  ];
+
+  var hash = 0;
+  if (str.length === 0) return ["#fff", "#000"];
+  for (var i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    hash = hash & hash;
+  }
+  hash = ((hash % colors1.length) + colors1.length) % colors1.length;
+  return [colors1[hash], colors2[hash]];
+}
 
 const CreateProfile = () => {
   const [domain, setDomain] = useState("");
   const [record, setRecord] = useState("");
+  const [minting, setMinting] = useState<undefined | string>();
   const [info, setInfo] = useState<generalInfo>({
     name: "",
     bio: "",
@@ -42,6 +140,13 @@ const CreateProfile = () => {
   const [loading, setLoading] = useState(false);
   const { account, web3Provider } = useWallet();
   const [metadataUri, setMetaUri] = useState<undefined | string>();
+
+  // const getColor = () => {
+  //   console.log(`data:image/svg+xml;base64,${btoa(generatedNft(domain))}`);
+  // };
+  // useEffect(() => {
+  //   getColor();
+  // }, [domain]);
 
   const setHunterType = (type: number) => {
     switch (type) {
@@ -144,10 +249,13 @@ const CreateProfile = () => {
     if (!domain) {
       return;
     }
-    if (!metadataUri) {
-      const res = await generateProfile();
-      if (!res) return;
-    }
+    // if (!metadataUri) {
+    setMinting("Building Your NFT 🏗");
+    const res = await generateProfile();
+    if (!res) return;
+    const { uri } = res;
+    setMinting("Minting NFT 🚀");
+    // }
     // Alert the user if the domain is too short
     if (domain.length < 3) {
       alert("Domain must be at least 3 characters long");
@@ -167,7 +275,7 @@ const CreateProfile = () => {
       );
 
       console.log("Going to pop wallet now to pay gas...");
-      let tx = await contract.register(domain, record, metadataUri ?? "", {
+      let tx = await contract.register(domain, uri, {
         value: ethers.utils.parseEther(price),
       });
       // Wait for the transaction to be mined
@@ -192,10 +300,13 @@ const CreateProfile = () => {
 
         setRecord("");
         setDomain("");
+        setMinting(undefined);
       } else {
         alert("Transaction failed! Please try again");
+        setMinting(undefined);
       }
     } catch (error) {
+      setMinting(undefined);
       console.log(error);
     }
   };
@@ -237,9 +348,34 @@ const CreateProfile = () => {
   };
 
   const generateProfile = async () => {
+    const image = `data:image/svg+xml;base64,${btoa(generatedNft(domain))}`;
     const profileData = jsonFile("metadata.json", {
-      ...info,
-      image: `https://avatar.tobi.sh/${domain}.svg`,
+      name: `${domain}${tld}`,
+      description: info.bio,
+      external_url: info.portfolioLink,
+      attributes: [
+        {
+          trait_type: "Full_Name",
+          value: info.name,
+        },
+        {
+          trait_type: "Email",
+          value: info.email,
+        },
+        {
+          trait_type: "Based_Of",
+          value: info.basedOf,
+        },
+        {
+          trait_type: "Hunter_Type",
+          value: info.hunterType[0],
+        },
+        {
+          trait_type: "Twitter",
+          value: info.twitter,
+        },
+      ],
+      image,
     });
     const res = await storeFile(profileData, "metadata.json");
     console.log("Profile generated ", res);
@@ -264,13 +400,13 @@ const CreateProfile = () => {
           <p className="font-black text-primary-500"> {tld} </p>
         </div>
 
-        <input
+        {/* <input
           className="my-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
           type="text"
           value={record}
           placeholder="whats ur hunter power?"
           onChange={(e) => setRecord(e.target.value)}
-        />
+        /> */}
         <input
           className="my-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
           type="text"
@@ -378,16 +514,16 @@ const CreateProfile = () => {
         ) : (
           // If editing is not true, the mint button will be returned instead
           <>
-            <Button className="mt-1" block={true} onClick={generateProfile}>
+            {/* <Button className="mt-1" block={true} onClick={generateProfile}>
               Generate Profile
-            </Button>
+            </Button> */}
             <Button
               className="my-1"
               block={true}
-              disabled={loading}
+              disabled={!!minting}
               onClick={mintDomain}
             >
-              Mint
+              {minting ? minting : "Mint"}
             </Button>
           </>
         )}
