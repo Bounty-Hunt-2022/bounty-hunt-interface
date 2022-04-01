@@ -63,7 +63,6 @@ const Bounty = () => {
   };
 
   const setBountyWinners = async () => {
-    debugger;
     if (!web3Provider) return;
     if (typeof slug !== "string") return;
     if (addressCheck?.includes(false)) return;
@@ -78,7 +77,6 @@ const Bounty = () => {
       );
       //   setId(uuid());
       const id = slug;
-      debugger;
       const tx = await contract.setBountyWinners(id, winners);
       const receipt = await tx.wait();
 

@@ -22,7 +22,7 @@ const BountyCard = ({
   deadline: string;
   uri: string;
   company: string;
-  title: string;
+  title?: string;
   type: string;
   image: string;
 }) => {
@@ -43,7 +43,7 @@ const BountyCard = ({
       />
       <p className="font-semibold text-dark-500">
         {company}--
-        <span className="text-sm">{title}</span>
+        <span className="text-sm">{title && title}</span>
       </p>
       <div className="flex">
         <span className="m-0.5 px-1 bg-rose-200 text-rose-700 text-xs font-bold rounded-xl">

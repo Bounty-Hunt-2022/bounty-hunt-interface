@@ -1,10 +1,14 @@
 import { request } from "graphql-request";
+import { stringify } from "querystring";
 import useSWR from "swr";
+import { retrieve } from "../../utils/storeFile";
 import data from "./metadata.json";
+import isIPFS from "is-ipfs";
+import { useMemo } from "react";
 const metadata: {
   [key: string]: {
     company: string;
-    title: string;
+    // title: string;
     type: string;
     image: string;
   };
@@ -39,13 +43,18 @@ export function useBounties(): {
   deadline: string;
   uri: string;
   company: string;
-  title: string;
   type: string;
   image: string;
   active: boolean;
   admin: string;
+  about?: string;
+  submissionLink?: string;
+  title?: string;
 }[] {
   const { data } = useSWR(QUERY, fetcher);
+  const fetchMetadata = async (cid: string) => {
+    return await retrieve(cid);
+  };
 
   return data?.bounties?.map(
     (bounty: {
@@ -56,21 +65,39 @@ export function useBounties(): {
       tokenLimit: string;
       deadline: string;
       admin: string;
+      about?: string;
+      submissionLink?: string;
+      title?: string;
     }) => {
       const reward = bounty.rewards.reduce(
         (partialSum, a) => partialSum + parseFloat(a),
         0
       );
-      return {
-        ...metadata[bounty.admin],
-        id: bounty.id,
-        active: bounty.active,
-        admin: bounty.admin,
-        reward,
-        tokenLimit: parseFloat(bounty.tokenLimit),
-        deadline: bounty.deadline,
-        uri: bounty.uri,
-      };
+
+      if (isIPFS.cid(bounty.id)) {
+        return {
+          ...metadata[bounty.admin],
+          id: bounty.id,
+          active: bounty.active,
+          admin: bounty.admin,
+          reward,
+          tokenLimit: parseFloat(bounty.tokenLimit),
+          deadline: bounty.deadline,
+          uri: bounty.uri,
+          // ...metadataFromIpfs,
+        };
+      } else {
+        return {
+          ...metadata[bounty.admin],
+          id: bounty.id,
+          active: bounty.active,
+          admin: bounty.admin,
+          reward,
+          tokenLimit: parseFloat(bounty.tokenLimit),
+          deadline: bounty.deadline,
+          uri: bounty.uri,
+        };
+      }
     }
   );
 }
@@ -82,11 +109,13 @@ export function useAdminBounties(account: string | undefined | null): {
   deadline: string;
   uri: string;
   company: string;
-  title: string;
   type: string;
   image: string;
   active: boolean;
   admin: string;
+  about?: string;
+  submissionLink?: string;
+  title?: string;
 }[] {
   const bounties = useBounties();
   return account
@@ -106,7 +135,7 @@ export function useBounty(id: string):
       deadline: string;
       uri: string;
       company: string;
-      title: string;
+      title?: string;
       type: string;
       image: string;
       active: boolean;
@@ -137,6 +166,13 @@ export function useBounty(id: string):
       (partialSum, a) => partialSum + parseFloat(a),
       0
     );
+    // // const metadataFromIpfs:
+    //   | {
+    //       about?: string;
+    //       submissionLink?: string;
+    //       title?: string;
+    //     }
+    //   | undefined = await fetchMetadata(bounty.id);
     return {
       ...metadata[bounty.admin],
       id: bounty.id,

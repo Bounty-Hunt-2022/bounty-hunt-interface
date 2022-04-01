@@ -77,9 +77,10 @@ export async function retrieve(cid: string) {
   const url = makeGatewayURL(cid, "metadata.json");
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(
-      `error fetching metadata: [${res.status}] ${res.statusText}`
-    );
+    return undefined;
+    // throw new Error(
+    //   `error fetching metadata: [${res.status}] ${res.statusText}`
+    // );
   }
   const metadata = await res.json();
   // const gatewayURL = makeGatewayURL(cid, metadata.path)

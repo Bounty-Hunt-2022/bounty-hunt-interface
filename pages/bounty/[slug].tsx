@@ -21,6 +21,7 @@ const Bounty = () => {
   }, []);
   const fetchMetadata = async (cid: string) => {
     const res = await retrieve(cid);
+    console.log(res);
     setMetadata(res);
   };
   const deadline =

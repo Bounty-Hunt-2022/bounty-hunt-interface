@@ -9,6 +9,7 @@ import { jsonFile, storeFile, storeFiles } from "../../utils/storeFile";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Base64 } from "js-base64";
+import { useRouter } from "next/router";
 
 const regex = new RegExp("^[0-9,]*$");
 const regexNumber = new RegExp("^[0-9,]*$");
@@ -89,12 +90,13 @@ function getColorFromArray(str: string): string[] {
 }
 
 const Creator = () => {
+  const router = useRouter();
   const [currentTime, setCurrentTime] = useState(
     new Date(Date.now()).toISOString()
   );
   const [rewards, setRewards] = useState("");
   const [tokenLimit, setTokenLimit] = useState("");
-  // const [id, setId] = useState("");
+  const [title, setTitle] = useState("");
   // const [uri, setUri] = useState("");
   const [loading, setLoading] = useState(false);
   const [endTime, setEndTime] = useState("");
@@ -147,16 +149,16 @@ const Creator = () => {
         generatedNft(account, hunterType, i + 1)
       )}`;
       nftUriArr.push(
-        jsonFile(`${i}.json`, {
+        jsonFile(`${i + 1}.json`, {
           name: `Winner#${i + 1}`,
           description: "This NFT represents your win!",
           image,
         })
       );
     }
-    const res = await storeFiles(nftUriArr, "metadata.json");
+    const res = await storeFiles(nftUriArr, "");
     if (!res) return;
-    return `${res.uri}/`;
+    return `ipfs://${res.cid}/`;
   };
   const createBounty = async () => {
     if (!web3Provider) return;
@@ -175,7 +177,6 @@ const Creator = () => {
       const res = await generateMetadata();
       if (!res) return;
       const id = res.cid;
-      debugger;
       const tx = await contract.createBounty(
         id,
         uri,
@@ -243,8 +244,14 @@ const Creator = () => {
 
       {eligible && (
         <div className="flex flex-col items-center max-w-sm m-auto">
-          <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
-            Create Bounty
+          <h1 className="font-bold text-3xl text-center text-primary-500 mb-2">
+            Welcome Creator!
+          </h1>
+          <Button block onClick={() => router.push("/creator/bounties")}>
+            Your Created Bounties
+          </Button>
+          <h1 className="font-bold text-2xl text-center text-primary-500 mt-5 mb-2">
+            Create a new bounty
           </h1>
           {/* <input
           className="my-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
@@ -253,13 +260,18 @@ const Creator = () => {
           placeholder="bounty id"
           onChange={(e) => setId(e.target.value)}
         /> */}
-          {/* <input
-            className="my-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
+          <input
+            className="mt-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
             type="text"
-            value={uri}
-            placeholder="uri"
-            onChange={(e) => setUri(e.target.value)}
-          /> */}
+            value={title}
+            placeholder="Title"
+            onChange={(e) => {
+              if (title.length <= 30) setTitle(e.target.value);
+            }}
+          />
+          <span className="text-primary-500 mb-1 w-full text-xs">
+            {title.length}/30
+          </span>
           <input
             className="my-1 w-full p-2 border-solid border-2 border-primary-500 rounded-md active:border-primary-600 focus:outline-none focus:shadow-outline grow"
             type="text"

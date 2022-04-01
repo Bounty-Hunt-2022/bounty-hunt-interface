@@ -4,6 +4,7 @@ import { useBounties } from "../state/bounties/hook";
 
 const Bounties = () => {
   const bounties = useBounties();
+  console.log(bounties);
 
   return (
     <div className="mx-4 mt-16 sm:mt-32 sm:mx-10 md:mx-20">
