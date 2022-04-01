@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { hunterDomainAddress, tld } from "../constants";
@@ -541,18 +542,13 @@ const CreateProfile = () => {
                   key={index}
                 >
                   <div className="flex">
-                    <a
-                      className="font-black text-primary-500"
-                      href={`https://testnets.opensea.io/assets/rinkeby/${hunterDomainAddress}/${mint.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <p className="underlined">
+                    <Link href={`hunter/${mint.name}${tld}`}>
+                      <a className="font-black text-primary-500 underlined">
                         {" "}
                         {mint.name}
                         {tld}{" "}
-                      </p>
-                    </a>
+                      </a>
+                    </Link>
                     {/* If mint.owner is account, add an "edit" button*/}
                     {mint.owner.toLowerCase() === account.toLowerCase() ? (
                       <button

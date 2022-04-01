@@ -40,7 +40,8 @@ const Bounty = () => {
           <p className={"text-sm text-black-500"}>Deadline: {deadline} </p>
           {metadata?.submissionLink && (
             <a
-              target={"_blank"}
+              target="_blank"
+              rel="noopener noreferrer"
               href={metadata.submissionLink}
               className={
                 "text-lg text-black-500 mt-5 underline underline-offset-2 cursor-pointer"

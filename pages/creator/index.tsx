@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { bountyMakerAddress } from "../../constants";
 import useWallet from "../../state/wallet/hook";
 import BountyMaker from "../../constants/abis/BountyMaker.json";
-import { uuid } from "uuidv4";
 import Button from "../../components/Button";
 import { getEllipsisTxt } from "../../utils";
 import { jsonFile, storeFile } from "../../utils/storeFile";
@@ -18,7 +17,7 @@ const Creator = () => {
   );
   const [rewards, setRewards] = useState("");
   const [tokenLimit, setTokenLimit] = useState("");
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
   const [uri, setUri] = useState("");
   const [loading, setLoading] = useState(false);
   const [endTime, setEndTime] = useState("");
@@ -103,7 +102,6 @@ const Creator = () => {
     const data = jsonFile("metadata.json", {
       about,
       submissionLink,
-      id,
     });
     const res = await storeFile(data, "metadata.json");
     if (res) return res;
