@@ -85,6 +85,5 @@ export async function retrieve(cid: string) {
   const metadata = await res.json();
   // const gatewayURL = makeGatewayURL(cid, metadata.path)
   // const uri = `ipfs://${cid}/${metadata.path}`
-  console.log(metadata);
   return { ...metadata }; // request succeeded! do something with the response object here...
 }

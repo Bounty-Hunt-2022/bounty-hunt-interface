@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { retrieve } from "../../utils/storeFile";
 import data from "./metadata.json";
 import isIPFS from "is-ipfs";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 const metadata: {
   [key: string]: {
     company: string;
@@ -52,54 +52,82 @@ export function useBounties(): {
   title?: string;
 }[] {
   const { data } = useSWR(QUERY, fetcher);
-  const fetchMetadata = async (cid: string) => {
-    return await retrieve(cid);
-  };
-
-  return data?.bounties?.map(
-    (bounty: {
-      id: string;
-      active: boolean;
-      rewards: string[];
-      uri: string;
-      tokenLimit: string;
-      deadline: string;
-      admin: string;
+  const [ipfsMetadata, setIpfsMetadata] = useState<{
+    [key: string]: {
       about?: string;
       submissionLink?: string;
       title?: string;
-    }) => {
-      const reward = bounty.rewards.reduce(
-        (partialSum, a) => partialSum + parseFloat(a),
-        0
-      );
+    };
+  }>({});
 
-      if (isIPFS.cid(bounty.id)) {
-        return {
-          ...metadata[bounty.admin],
-          id: bounty.id,
-          active: bounty.active,
-          admin: bounty.admin,
-          reward,
-          tokenLimit: parseFloat(bounty.tokenLimit),
-          deadline: bounty.deadline,
-          uri: bounty.uri,
-          // ...metadataFromIpfs,
-        };
-      } else {
-        return {
-          ...metadata[bounty.admin],
-          id: bounty.id,
-          active: bounty.active,
-          admin: bounty.admin,
-          reward,
-          tokenLimit: parseFloat(bounty.tokenLimit),
-          deadline: bounty.deadline,
-          uri: bounty.uri,
-        };
+  useEffect(() => {
+    if (!data?.bounties) return;
+
+    const load = async () => {
+      const req = data?.bounties.map(async (bounty: any) => {
+        if (!isIPFS.cid(bounty?.id)) return undefined;
+        const res = await retrieve(bounty?.id);
+        return res;
+      });
+      const res = await Promise.all(req);
+      let obj = {};
+      res.map((i: any, index) => {
+        if (i) {
+          obj = { ...obj, [data?.bounties[index].id]: i };
+        }
+        return null;
+      });
+      setIpfsMetadata({ ...obj });
+    };
+    load();
+  }, [data]);
+
+  return useMemo(() => {
+    return data?.bounties?.map(
+      (bounty: {
+        id: string;
+        active: boolean;
+        rewards: string[];
+        uri: string;
+        tokenLimit: string;
+        deadline: string;
+        admin: string;
+        about?: string;
+        submissionLink?: string;
+        title?: string;
+      }) => {
+        const reward = bounty.rewards.reduce(
+          (partialSum, a) => partialSum + parseFloat(a),
+          0
+        );
+
+        if (ipfsMetadata[bounty.id]) {
+          return {
+            ...metadata[bounty.admin],
+            id: bounty.id,
+            active: bounty.active,
+            admin: bounty.admin,
+            reward,
+            tokenLimit: parseFloat(bounty.tokenLimit),
+            deadline: bounty.deadline,
+            uri: bounty.uri,
+            ...ipfsMetadata[bounty.id],
+          };
+        } else {
+          return {
+            ...metadata[bounty.admin],
+            id: bounty.id,
+            active: bounty.active,
+            admin: bounty.admin,
+            reward,
+            tokenLimit: parseFloat(bounty.tokenLimit),
+            deadline: bounty.deadline,
+            uri: bounty.uri,
+          };
+        }
       }
-    }
-  );
+    );
+  }, [data, ipfsMetadata]);
 }
 
 export function useAdminBounties(account: string | undefined | null): {

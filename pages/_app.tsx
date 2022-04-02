@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { AppProvider } from "../context/StateProvider";
 import Header from "../components/Header";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -15,6 +16,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 export default MyApp;
 
 function BaseLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  console.log(router.pathname.split("/"));
   return (
     <>
       <Head>
@@ -28,6 +31,11 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
       </Head>
       <AppProvider>
         <Header />
+        <Head>
+          <title>
+            BountyHunt-{router.pathname.split("/")[1]?.toUpperCase()}
+          </title>
+        </Head>
 
         {children}
       </AppProvider>

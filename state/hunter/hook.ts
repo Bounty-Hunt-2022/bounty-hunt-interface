@@ -72,7 +72,6 @@ export const useHunterFunctions = () => {
       if (!account) return undefined;
       if (!web3Provider) return undefined;
       setClaiming("Claiming");
-      debugger;
       const signer = web3Provider.getSigner();
       const contract = new ethers.Contract(
         bountyMakerAddress,

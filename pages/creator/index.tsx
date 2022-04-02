@@ -231,6 +231,7 @@ const Creator = () => {
 
   const generateMetadata = async () => {
     const data = jsonFile("metadata.json", {
+      title,
       about,
       submissionLink,
     });
