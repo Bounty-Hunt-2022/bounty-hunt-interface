@@ -1,12 +1,10 @@
 {
   "0x40d5250d1ce81fdd1f0e0fb4f471e57aa0c1fad3": {
     "company": "Uniswap",
-    "type": "Bounty",
     "image": "./Banner.jpg"
   },
-  "0xd253edaf1b53a2e0e5e1b8021ba4937d21806dd3": {
+  "0x23aC45227CB7CabF48Bd26200aD9a9C8bD40e2D9": {
     "company": "Router",
-    "type": "Case Study",
-    "image": "./Banner.jpg"
+    "image": "./Router.jpg"
   }
 }

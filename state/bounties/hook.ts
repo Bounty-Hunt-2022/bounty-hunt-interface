@@ -9,12 +9,12 @@ const metadata: {
   [key: string]: {
     company: string;
     // title: string;
-    type: string;
+    // type: string;
     image: string;
   };
 } = data;
 const QUERY = `{
-  bounties(first: 10) {
+  bounties {
     id
     active
     rewards
@@ -183,6 +183,7 @@ export function useBounty(id: string):
       uri: bounty.uri,
       active: bounty.active,
       admin: bounty.admin,
+      type: "",
     };
   }
   return undefined;

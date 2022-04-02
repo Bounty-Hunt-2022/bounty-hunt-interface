@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { bountyMakerAddress } from "../../constants";
 import useWallet from "../../state/wallet/hook";
 import BountyMaker from "../../constants/abis/BountyMaker.json";
@@ -10,6 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Base64 } from "js-base64";
 import { useRouter } from "next/router";
+import useUsdc from "../../state/usdc/hook";
 
 const regex = new RegExp("^[0-9,]*$");
 const regexNumber = new RegExp("^[0-9,]*$");
@@ -104,6 +105,34 @@ const Creator = () => {
   const [eligible, setEligile] = useState(false);
   const [submissionLink, setSubmissionLink] = useState("");
   const [hunterType, setHunterType] = useState(-1);
+
+  const { getApproval, hasEnoughAllowance, hasEnoughBalance, approvalLoading } =
+    useUsdc();
+
+  const allowance = useMemo(() => {
+    return hasEnoughAllowance(
+      rewards
+        .split(",")
+        .map((i) => (Number(i) === NaN ? 0 : Number(i)))
+        .reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          0
+        )
+        .toString()
+    );
+  }, [hasEnoughAllowance, rewards]);
+  const balance = useMemo(() => {
+    return hasEnoughBalance(
+      rewards
+        .split(",")
+        .map((i) => (Number(i) === NaN ? 0 : Number(i)))
+        .reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          0
+        )
+        .toString()
+    );
+  }, [hasEnoughAllowance, rewards]);
 
   const { account, web3Provider, connect, disconnect, chainId, provider } =
     useWallet();
@@ -394,9 +423,20 @@ const Creator = () => {
           <Button className="my-1" block={true} onClick={uriCreation}>
             Generate uri
           </Button> */}
-          <Button disabled={loading} block onClick={createBounty}>
-            {!loading ? "Create Bounty 🚀" : "Creating Bounty 🏗"}
-          </Button>
+          {balance && !allowance && (
+            <Button block onClick={getApproval}>
+              {!approvalLoading ? "Get Approval ☑️" : "Getting Approval 📝"}
+            </Button>
+          )}
+          {allowance && (
+            <Button disabled={loading && !balance} block onClick={createBounty}>
+              {!balance
+                ? "Not enough balance 🥲"
+                : !loading
+                ? "Create Bounty 🚀"
+                : "Creating Bounty 🏗"}
+            </Button>
+          )}
         </div>
       )}
     </div>

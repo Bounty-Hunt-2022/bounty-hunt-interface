@@ -7,6 +7,8 @@ import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 import useWallet from "../../state/wallet/hook";
 import { isAddress } from "ethers/lib/utils";
 import { getEllipsisTxt } from "../../utils";
+import useHunterInfo from "../../state/hunter/hook";
+import BountyClaimCard from "../../components/BountyClaimCard";
 
 const web3 = createAlchemyWeb3(
   `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
@@ -20,7 +22,7 @@ const Hunter = () => {
     "https://testnets.opensea.io/static/images/placeholder.png"
   );
   const [isHunterDomain, setIsHunterDomain] = useState(false);
-
+  const hunterSubgraphData = useHunterInfo(address ?? "");
   const [profileNft, setProfileNft] = useState<any>();
 
   const { account, web3Provider } = useWallet();
@@ -46,19 +48,10 @@ const Hunter = () => {
 
   const fetchHunterMetadata = useCallback(async () => {
     if (address && isHunterDomain && typeof slug === "string") {
-      console.log(address);
       const nfts = await web3.alchemy.getNfts({
         owner: address,
         contractAddresses: [hunterDomainAddress],
       });
-      console.log(
-        "NFTs",
-        nfts.ownedNfts.filter(
-          (
-            nft // @ts-ignore
-          ) => nft.title.replace(".hunter", "") === slug.replace(".hunter", "")
-        )[0]
-      );
       setProfileNft(
         nfts.ownedNfts.filter(
           (
@@ -79,8 +72,6 @@ const Hunter = () => {
       external_url: metadata.external_url,
     };
   }, [profileNft]);
-
-  console.log(hunterInfo);
 
   useEffect(() => {
     fetchHunterMetadata();
@@ -111,7 +102,7 @@ const Hunter = () => {
   useEffect(() => {
     getUserNft();
   }, [address, getUserNft]);
-  console.log(nfts);
+  console.log(hunterSubgraphData);
   return (
     <div className="mx-4 mt-16 sm:mt-32 sm:mx-10 md:mx-40">
       {/* Hi {slug as string}, your address is: {address as string} */}
@@ -173,16 +164,51 @@ const Hunter = () => {
               </a>
             )}
           </div>
+          <div className="flex mt-2">
+            <div className="mr-4">
+              <p className="text-primary-500 font-semibold ">Wins</p>
+              <p className="text-secondary-500 text-sm uppercase">
+                {hunterSubgraphData?.winCount ?? 0}
+              </p>
+            </div>
+            <div className="mr-4">
+              <p className="text-primary-500 font-semibold ">Reward won</p>
+              <p className="text-secondary-500 text-sm uppercase">
+                ${hunterSubgraphData?.rewardWon ?? 0}
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
+      {account === address &&
+        Number(hunterSubgraphData?.winClaimed ?? "0") > 0 && (
+          <>
+            <h3 className=" text-2xl text-primary-500 font-bold mt-3 border-b-2 border-primary-500">
+              Claim NFTs
+            </h3>
+            <div className="grid grid-cols-1 gap-y-3 gap-x-3 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-4 mt-4">
+              {hunterSubgraphData?.wins
+                .filter((win) => !win.claimed)
+                .map((win) =>
+                  win.bountyId === "" ? (
+                    <></>
+                  ) : (
+                    <BountyClaimCard id={win.bountyId} />
+                  )
+                )}
+            </div>
+          </>
+        )}
       <h3 className=" text-2xl text-primary-500 font-bold mt-3 border-b-2 border-primary-500">
         NFTs won
       </h3>
-
       <div className="grid grid-cols-1 gap-y-3 gap-x-3 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-4 mt-4">
-        {nfts?.map((nft) => (
-          <div className="rounded-lg p-2 border border-solid border-secondary-500 w-fit">
+        {nfts?.map((nft, i) => (
+          <div
+            key={i}
+            className="rounded-lg p-2 border border-solid border-secondary-500 w-fit"
+          >
             <img
               className="max-w-[200px] rounded-lg"
               src={nft?.media[0]?.gateway ? nft?.media[0]?.gateway : image}
