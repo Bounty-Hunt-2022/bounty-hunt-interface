@@ -17,6 +17,7 @@ export enum ActionTypes {
   setAddress = "SET_ADDRESS",
   setChainId = "SET_CHAIN_ID",
   resetWeb3Provider = "RESET_WEB3_PROVIDER",
+  initialWeb3Provider = "INITIAL_WEB3_PROVIDER",
 }
 
 type Payload = {
@@ -25,6 +26,9 @@ type Payload = {
     web3Provider: any;
     account: string;
     chainId: number;
+  };
+  [ActionTypes.initialWeb3Provider]: {
+    web3Provider: any;
   };
   [ActionTypes.resetWeb3Provider]: {};
   [ActionTypes.setChainId]: {
@@ -46,6 +50,11 @@ export const reducer = (state: InitialStateType, action: Actions) => {
         web3Provider: action.payload.web3Provider,
         account: action.payload.account,
         chainId: action.payload.chainId,
+      };
+    case "INITIAL_WEB3_PROVIDER":
+      return {
+        ...state,
+        web3Provider: action.payload.web3Provider,
       };
     case "SET_ADDRESS":
       return {
