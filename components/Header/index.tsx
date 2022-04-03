@@ -6,34 +6,34 @@ import useWallet from "../../state/wallet/hook";
 import { getEllipsisTxt } from "../../utils";
 import Button from "../Button";
 import BountyMaker from "../../constants/abis/BountyMaker.json";
+import useHunterOrNot from "../../hooks/useHunterOrNot";
 
 const Header = () => {
   const { account, connect, disconnect, chainId, provider, web3Provider } =
     useWallet();
-  const [eligible, setEligile] = useState(false);
-  useEffect(() => {
-    if (account) {
-      isAdminCheck();
-    }
-  }, [account]);
-  const isAdminCheck = async () => {
-    try {
-      const signer = web3Provider.getSigner();
-      const contract = new ethers.Contract(
-        bountyMakerAddress,
-        BountyMaker,
-        signer
-      );
-      const isAdmin = await contract.amIAdmin(account);
-      console.log("isAdmin", isAdmin);
-      if (isAdmin) {
-        setEligile(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  // const [eligible, setEligile] = useState(false);
+  const { hunterDomain, hunterLoading } = useHunterOrNot();
+  // useEffect(() => {
+  //   if (account) {
+  //     isAdminCheck();
+  //   }
+  // }, [account]);
+  // const isAdminCheck = async () => {
+  //   try {
+  //     const signer = web3Provider.getSigner();
+  //     const contract = new ethers.Contract(
+  //       bountyMakerAddress,
+  //       BountyMaker,
+  //       signer
+  //     );
+  //     const isAdmin = await contract.amIAdmin(account);
+  //     if (isAdmin) {
+  //       setEligile(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
     <div className="fixed top-0 left-0 flex items-center justify-between w-full px-4 py-2 border-b bg-secondary-200 border-b-primary-400">
       <Link href="/">
@@ -74,12 +74,23 @@ const Header = () => {
           Switch To Mumbai
         </Button>
       )}
+      {chainId &&
+        chainId === Number("0x13881") &&
+        !hunterLoading &&
+        !hunterDomain && (
+          <Link href="/createProfile">
+            <Button>Create a Profile</Button>
+          </Link>
+        )}
+      {chainId &&
+        chainId === Number("0x13881") &&
+        !hunterLoading &&
+        hunterDomain && (
+          <Link href={`/hunter/${hunterDomain}`}>
+            <Button>Hunter Profile</Button>
+          </Link>
+        )}
       {chainId && chainId === Number("0x13881") && (
-        <Link href="/createProfile">
-          <Button>Create a Profile</Button>
-        </Link>
-      )}
-      {chainId && chainId === Number("0x13881") && eligible && (
         <Link href="/creator">
           <Button className="ml-1">Create a Bounty</Button>
         </Link>

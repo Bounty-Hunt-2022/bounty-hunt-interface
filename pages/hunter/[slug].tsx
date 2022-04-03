@@ -62,6 +62,7 @@ const Hunter = () => {
         owner: address,
         contractAddresses: [hunterDomainAddress],
       });
+
       setProfileNft(
         nfts.ownedNfts.filter(
           (
@@ -71,7 +72,7 @@ const Hunter = () => {
       );
     }
   }, [address, isHunterDomain]);
-
+  console.log(profileNft);
   const hunterInfo = useMemo(() => {
     if (!profileNft) return undefined;
     const { metadata } = profileNft;

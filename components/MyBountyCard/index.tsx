@@ -24,7 +24,7 @@ const BountyCard = ({
   company: string;
   title?: string;
   type: string;
-  image: string;
+  image?: string;
 }) => {
   const router = useRouter();
   const [timeStamp, setTimeStamp] = useState(Math.round(Date.now() / 1000));
@@ -36,11 +36,15 @@ const BountyCard = ({
   }, []);
   return (
     <div className="cursor-pointer w-full p-1.5 rounded-md min-h-60 border border-secondary-600">
-      <img
-        alt="demo"
-        className="object-contain w-full rounded-md"
-        src={image}
-      />
+      {image ? (
+        <img
+          alt="demo"
+          className="object-contain w-full rounded-md"
+          src={image}
+        />
+      ) : (
+        <div className="w-full h-auto rounded-md bg-secondary-500" />
+      )}
       <p className="font-semibold text-dark-500">
         {company}--
         <span className="text-sm">{title && title}</span>

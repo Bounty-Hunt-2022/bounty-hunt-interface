@@ -8,34 +8,34 @@ import useWallet from "../../state/wallet/hook";
 import { getEllipsisTxt } from "../../utils";
 
 const Bounties = () => {
-  const [eligible, setEligile] = useState(false);
+  // const [eligible, setEligile] = useState(false);
   const { account, web3Provider, connect, disconnect, chainId, provider } =
     useWallet();
   const bounties = useAdminBounties(account);
 
-  useEffect(() => {
-    if (account) {
-      isAdminCheck();
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (account) {
+  //     isAdminCheck();
+  //   }
+  // }, [account]);
 
-  const isAdminCheck = async () => {
-    try {
-      const signer = web3Provider.getSigner();
-      const contract = new ethers.Contract(
-        bountyMakerAddress,
-        BountyMaker,
-        signer
-      );
-      const isAdmin = await contract.amIAdmin(account);
-      console.log("isAdmin", isAdmin);
-      if (isAdmin) {
-        setEligile(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const isAdminCheck = async () => {
+  //   try {
+  //     const signer = web3Provider.getSigner();
+  //     const contract = new ethers.Contract(
+  //       bountyMakerAddress,
+  //       BountyMaker,
+  //       signer
+  //     );
+  //     const isAdmin = await contract.amIAdmin(account);
+  //     console.log("isAdmin", isAdmin);
+  //     if (isAdmin) {
+  //       setEligile(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="mx-4 mt-16 sm:mt-32 sm:mx-10 md:mx-20">
@@ -61,7 +61,7 @@ const Bounties = () => {
           </button>
         </div>
       )}
-      {account && !eligible && (
+      {account && (
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
             Not eligible to create Bounty
@@ -69,7 +69,7 @@ const Bounties = () => {
         </div>
       )}
 
-      {eligible && (
+      {
         <>
           <div className="flex flex-col">
             <h1 className={"text-2xl font-bold text-primary-500 mb"}>
@@ -85,7 +85,7 @@ const Bounties = () => {
             ))}
           </div>
         </>
-      )}
+      }
     </div>
   );
 };

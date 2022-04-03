@@ -14,7 +14,7 @@ const Bounty = () => {
   const router = useRouter();
   const { slug } = router.query;
   const bounty = useBounty(slug as string);
-  const [eligible, setEligile] = useState(false);
+  // const [eligible, setEligile] = useState(false);
   const [winners, setWinners] = useState<undefined | string[]>(undefined);
   const [addressCheck, setAddressCheck] = useState<undefined | boolean[]>(
     undefined
@@ -38,29 +38,29 @@ const Bounty = () => {
     }
   }, [bounty]);
 
-  useEffect(() => {
-    if (account) {
-      isAdminCheck();
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (account) {
+  //     isAdminCheck();
+  //   }
+  // }, [account]);
 
-  const isAdminCheck = async () => {
-    try {
-      const signer = web3Provider.getSigner();
-      const contract = new ethers.Contract(
-        bountyMakerAddress,
-        BountyMaker,
-        signer
-      );
-      const isAdmin = await contract.amIAdmin(account);
-      console.log("isAdmin", isAdmin);
-      if (isAdmin) {
-        setEligile(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const isAdminCheck = async () => {
+  //   try {
+  //     const signer = web3Provider.getSigner();
+  //     const contract = new ethers.Contract(
+  //       bountyMakerAddress,
+  //       BountyMaker,
+  //       signer
+  //     );
+  //     const isAdmin = await contract.amIAdmin(account);
+  //     console.log("isAdmin", isAdmin);
+  //     if (isAdmin) {
+  //       setEligile(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const setBountyWinners = async () => {
     if (!web3Provider) return;
@@ -118,14 +118,14 @@ const Bounty = () => {
           </button>
         </div>
       )}
-      {account && !eligible && (
+      {account && (
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
             Not eligible to create Bounty
           </h1>
         </div>
       )}
-      {eligible && bounty && !bounty.active && (
+      {bounty && !bounty.active && (
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
             Winners Declared
@@ -133,7 +133,7 @@ const Bounty = () => {
         </div>
       )}
 
-      {eligible && bounty?.active && (
+      {bounty?.active && (
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
             Set Winners Bounty

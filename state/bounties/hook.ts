@@ -5,6 +5,7 @@ import { retrieve } from "../../utils/storeFile";
 import data from "./metadata.json";
 import isIPFS from "is-ipfs";
 import { useEffect, useMemo, useState } from "react";
+import { bountyMakerSubgraph } from "../../constants";
 const metadata: {
   [key: string]: {
     company: string;
@@ -32,8 +33,7 @@ const QUERY = `{
 }`;
 
 // @ts-ignore TYPE NEEDS FIXING
-const fetcher = (query) =>
-  request("https://api.thegraph.com/subgraphs/name/jds-23/bounty-maker", query);
+const fetcher = (query) => request(bountyMakerSubgraph, query);
 
 // Returns ratio of bounties
 export function useBounties(): {
@@ -164,7 +164,7 @@ export function useBounty(id: string):
       uri: string;
       company: string;
       title?: string;
-      type: string;
+      type?: string;
       image: string;
       active: boolean;
       admin: string;
@@ -189,6 +189,15 @@ export function useBounty(id: string):
       admin: string;
     }) => bounty.id === id
   );
+  const [ipfsMetadata, setIpfsMetadata] = useState<any>();
+  useEffect(() => {
+    const load = async () => {
+      if (!isIPFS.cid(bounty?.id)) return undefined;
+      const res = await retrieve(bounty?.id);
+      setIpfsMetadata(res);
+    };
+    load();
+  }, [bounty]);
   if (bounty) {
     const reward = bounty.rewards.reduce(
       (partialSum, a) => partialSum + parseFloat(a),
@@ -201,18 +210,34 @@ export function useBounty(id: string):
     //       title?: string;
     //     }
     //   | undefined = await fetchMetadata(bounty.id);
-    return {
-      ...metadata[bounty.admin],
-      id: bounty.id,
-      reward,
-      rewards: bounty.rewards.map((a) => parseFloat(a)),
-      tokenLimit: parseFloat(bounty.tokenLimit),
-      deadline: bounty.deadline,
-      uri: bounty.uri,
-      active: bounty.active,
-      admin: bounty.admin,
-      type: "",
-    };
+    return useMemo(() => {
+      if (!ipfsMetadata)
+        return {
+          ...metadata[bounty.admin],
+          id: bounty.id,
+          reward,
+          rewards: bounty.rewards.map((a) => parseFloat(a)),
+          tokenLimit: parseFloat(bounty.tokenLimit),
+          deadline: bounty.deadline,
+          uri: bounty.uri,
+          active: bounty.active,
+          admin: bounty.admin,
+          type: "",
+        };
+      else
+        return {
+          ...ipfsMetadata,
+          ...metadata[bounty.admin],
+          id: bounty.id,
+          reward,
+          rewards: bounty.rewards.map((a) => parseFloat(a)),
+          tokenLimit: parseFloat(bounty.tokenLimit),
+          deadline: bounty.deadline,
+          uri: bounty.uri,
+          active: bounty.active,
+          admin: bounty.admin,
+        };
+    }, [bounty]);
   }
   return undefined;
 }

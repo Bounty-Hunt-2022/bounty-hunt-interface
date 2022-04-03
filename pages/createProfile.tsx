@@ -116,7 +116,6 @@ function getColorFromArray(str: string): string[] {
 
 const CreateProfile = () => {
   const [domain, setDomain] = useState("");
-  const [record, setRecord] = useState("");
   const [minting, setMinting] = useState<undefined | string>();
   const [info, setInfo] = useState<generalInfo>({
     name: "",
@@ -216,24 +215,23 @@ const CreateProfile = () => {
       // For each name, get the record and the address
       const mintRecords = await Promise.all(
         names.map(async (name: any) => {
-          const mintRecord = await contract.records(name);
+          // const mintRecord = await contract.records(name);
           const owner = await contract.domains(name);
           return {
             id: names.indexOf(name),
             name: name,
-            record: mintRecord,
+            // record: mintRecord,
             owner: owner,
           };
         })
       );
 
-      console.log("MINTS FETCHED ", mintRecords);
+      // console.log("MINTS FETCHED ", mintRecords);
       setMints(mintRecords);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log("Mints", mints);
 
   const mintDomain = async () => {
     // Don't run if the domain is empty
@@ -255,7 +253,11 @@ const CreateProfile = () => {
     // Calculate price based on length of domain (change this to match your contract)
     // 3 chars = 0.5 MATIC, 4 chars = 0.3 MATIC, 5 or more = 0.1 MATIC
     const price =
-      domain.length === 3 ? "0.5" : domain.length === 4 ? "0.3" : "0.1";
+      domain.length === 3
+        ? "0.0000005"
+        : domain.length === 4
+        ? "0.0000003"
+        : "0.0000001";
     console.log("Minting domain", domain, "with price", price);
     try {
       const signer = web3Provider.getSigner();
@@ -289,7 +291,7 @@ const CreateProfile = () => {
           fetchMints();
         }, 2000);
 
-        setRecord("");
+        // setRecord("");
         setDomain("");
         setMinting(undefined);
       } else {
@@ -302,33 +304,33 @@ const CreateProfile = () => {
     }
   };
 
-  const updateDomain = async () => {
-    if (!record || !domain) {
-      return;
-    }
-    setLoading(true);
-    console.log("Updating domain", domain, "with record", record);
-    try {
-      const signer = web3Provider.getSigner();
-      const contract = new ethers.Contract(
-        hunterDomainAddress,
-        DomainMaker,
-        signer
-      );
+  // const updateDomain = async () => {
+  //   if (!record || !domain) {
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   console.log("Updating domain", domain, "with record", record);
+  //   try {
+  //     const signer = web3Provider.getSigner();
+  //     const contract = new ethers.Contract(
+  //       hunterDomainAddress,
+  //       DomainMaker,
+  //       signer
+  //     );
 
-      let tx = await contract.setRecord(domain, record);
-      await tx.wait();
-      console.log("Record set https://mumbai.polygonscan.com/tx/" + tx.hash);
+  //     let tx = await contract.setRecord(domain, record);
+  //     await tx.wait();
+  //     console.log("Record set https://mumbai.polygonscan.com/tx/" + tx.hash);
 
-      fetchMints();
-      setRecord("");
-      setDomain("");
-      setEditing(false);
-    } catch (error) {
-      console.log(error);
-    }
-    setLoading(false);
-  };
+  //     fetchMints();
+  //     setRecord("");
+  //     setDomain("");
+  //     setEditing(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setLoading(false);
+  // };
   useEffect(() => {
     fetchMints();
   }, [account]);
@@ -485,14 +487,14 @@ const CreateProfile = () => {
         {/* If the editing variable is true, return the "Set record" and "Cancel" button */}
         {editing ? (
           <div className="my-1 flex flex-col items-center w-full">
-            <Button
+            {/* <Button
               className="mb-1"
               block={true}
               disabled={loading}
-              onClick={updateDomain}
+              // onClick={updateDomain}
             >
               Set record
-            </Button>
+            </Button> */}
             <Button
               block={true}
               onClick={() => {
@@ -539,8 +541,7 @@ const CreateProfile = () => {
                         {tld}{" "}
                       </a>
                     </Link>
-                    {/* If mint.owner is account, add an "edit" button*/}
-                    {mint.owner.toLowerCase() === account.toLowerCase() ? (
+                    {/* {mint.owner.toLowerCase() === account.toLowerCase() ? (
                       <button
                         className="edit-button"
                         onClick={() => editRecord(mint.name)}
@@ -551,7 +552,7 @@ const CreateProfile = () => {
                           alt="Edit button"
                         />
                       </button>
-                    ) : null}
+                    ) : null} */}
                   </div>
                   <p> {mint.record} </p>
                 </div>

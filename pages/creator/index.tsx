@@ -102,7 +102,7 @@ const Creator = () => {
   const [loading, setLoading] = useState(false);
   const [endTime, setEndTime] = useState("");
   const [about, setAbout] = useState("");
-  const [eligible, setEligile] = useState(false);
+  // const [eligible, setEligile] = useState(false);
   const [submissionLink, setSubmissionLink] = useState("");
   const [hunterType, setHunterType] = useState(-1);
 
@@ -139,29 +139,29 @@ const Creator = () => {
 
   // if (account && hunterType >= 0)
   // console.log(generatedNft(account, hunterType, 12));
-  useEffect(() => {
-    if (account) {
-      isAdminCheck();
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (account) {
+  //     isAdminCheck();
+  //   }
+  // }, [account]);
 
-  const isAdminCheck = async () => {
-    try {
-      const signer = web3Provider.getSigner();
-      const contract = new ethers.Contract(
-        bountyMakerAddress,
-        BountyMaker,
-        signer
-      );
-      const isAdmin = await contract.amIAdmin(account);
-      console.log("isAdmin", isAdmin);
-      if (isAdmin) {
-        setEligile(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const isAdminCheck = async () => {
+  //   try {
+  //     const signer = web3Provider.getSigner();
+  //     const contract = new ethers.Contract(
+  //       bountyMakerAddress,
+  //       BountyMaker,
+  //       signer
+  //     );
+  //     const isAdmin = await contract.amIAdmin(account);
+  //     console.log("isAdmin", isAdmin);
+  //     if (isAdmin) {
+  //       setEligile(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     function tick() {
@@ -210,7 +210,9 @@ const Creator = () => {
         id,
         uri,
         tokenLimit,
-        rewards.split(","),
+        rewards
+          .split(",")
+          .map((i) => (Number(i) === NaN ? "0" : Number(i).toFixed(0))),
         endTime
       );
       const receipt = await tx.wait();
@@ -264,15 +266,15 @@ const Creator = () => {
           </button>
         </div>
       )}
-      {account && !eligible && (
+      {/* {account && (
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
             Not eligible to create Bounty
           </h1>
         </div>
-      )}
+      )} */}
 
-      {eligible && (
+      {
         <div className="flex flex-col items-center max-w-sm m-auto">
           <h1 className="font-bold text-3xl text-center text-primary-500 mb-2">
             Welcome Creator!
@@ -439,7 +441,7 @@ const Creator = () => {
             </Button>
           )}
         </div>
-      )}
+      }
     </div>
   );
 };

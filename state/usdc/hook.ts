@@ -39,9 +39,7 @@ const useUsdc = () => {
     const receipt = await tx.wait();
     setApprovalLoading(false);
     if (receipt.status === 1) {
-      console.log(
-        "Bounty created! https://mumbai.polygonscan.com/tx/" + tx.hash
-      );
+      console.log("Approved! https://mumbai.polygonscan.com/tx/" + tx.hash);
     } else {
       alert("Transaction failed! Please try again");
     }
@@ -70,7 +68,7 @@ const useUsdc = () => {
   useEffect(() => {
     async function load() {
       const allowance = await getAllowance();
-      const balance = await getAllowance();
+      const balance = await getBalance();
       console.log({ allowance, balance });
       setAllownace(allowance);
       setBalance(balance);

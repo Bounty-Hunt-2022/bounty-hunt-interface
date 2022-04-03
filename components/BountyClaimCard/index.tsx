@@ -9,12 +9,14 @@ const BountyClaimCard = ({ id }: { id: string }) => {
   console.log(claiming);
   return (
     <div className="cursor-pointer w-full p-1.5 rounded-md min-h-60 border border-secondary-600">
-      {bounty?.image && (
+      {bounty?.image ? (
         <img
           alt="demo"
           className="object-contain w-full rounded-md"
           src={bounty?.image}
         />
+      ) : (
+        <div className="w-full h-auto rounded-md bg-secondary-500" />
       )}
       <p className="font-semibold text-dark-500">
         {bounty?.company}--

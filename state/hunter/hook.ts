@@ -26,8 +26,7 @@ const QUERY = (account: string) => `{
   }`;
 
 // @ts-ignore TYPE NEEDS FIXING
-const fetcher = (query) =>
-  request("https://api.thegraph.com/subgraphs/name/jds-23/bounty-maker", query);
+const fetcher = (query) => request(bountyMakerSubgraph, query);
 
 interface hunter {
   id: string;
