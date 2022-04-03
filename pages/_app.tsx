@@ -4,6 +4,7 @@ import Head from "next/head";
 import { AppProvider } from "../context/StateProvider";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
+import Button from "../components/Button";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -36,7 +37,12 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
             BountyHunt-{router.pathname.split("/")[1]?.toUpperCase()}
           </title>
         </Head>
-
+        <button
+          onClick={() => window.open("")}
+          className="fixed left-0 bottom-5 p-2 bg-red-500 text-white-100 font-bold rounded-r-lg"
+        >
+          Bug Report
+        </button>
         {children}
       </AppProvider>
     </>

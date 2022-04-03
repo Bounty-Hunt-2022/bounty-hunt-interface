@@ -63,9 +63,7 @@ const Bounties = () => {
       )}
       {account && (
         <div className="flex flex-col items-center max-w-sm m-auto">
-          <h1 className="font-bold text-2xl text-center text-primary-500 mb-6">
-            Not eligible to create Bounty
-          </h1>
+          <h1 className="font-bold text-2xl text-center text-primary-500 mb-6"></h1>
         </div>
       )}
 
