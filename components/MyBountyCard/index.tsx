@@ -43,7 +43,13 @@ const BountyCard = ({
           src={image}
         />
       ) : (
-        <div className="w-full h-auto rounded-md bg-secondary-500" />
+        <img
+          alt="demo"
+          className="object-contain w-full rounded-md"
+          src={
+            "https://raw.githubusercontent.com/Jds-23/laughing-broccoli/main/default.jpeg"
+          }
+        />
       )}
       <p className="font-semibold text-dark-500">
         {company}--

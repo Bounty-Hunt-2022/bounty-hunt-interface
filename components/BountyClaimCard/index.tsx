@@ -6,7 +6,6 @@ import Button from "../Button";
 const BountyClaimCard = ({ id }: { id: string }) => {
   const bounty = useBounty(id);
   const { claimNft, claiming } = useHunterFunctions();
-  console.log(claiming);
   return (
     <div className="cursor-pointer w-full p-1.5 rounded-md min-h-60 border border-secondary-600">
       {bounty?.image ? (
@@ -16,7 +15,13 @@ const BountyClaimCard = ({ id }: { id: string }) => {
           src={bounty?.image}
         />
       ) : (
-        <div className="w-full h-auto rounded-md bg-secondary-500" />
+        <img
+          alt="demo"
+          className="object-contain w-full rounded-md"
+          src={
+            "https://raw.githubusercontent.com/Jds-23/laughing-broccoli/main/default.jpeg"
+          }
+        />
       )}
       <p className="font-semibold text-dark-500">
         {bounty?.company}--

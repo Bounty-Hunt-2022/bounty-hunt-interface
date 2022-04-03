@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import request from "graphql-request";
 import { useCallback, useState } from "react";
 import useSWR from "swr";
-import { bountyMakerAddress } from "../../constants";
+import { bountyMakerAddress, bountyMakerSubgraph } from "../../constants";
 import useWallet from "../wallet/hook";
 import BountyMaker from "../../constants/abis/BountyMaker.json";
 
@@ -26,7 +26,6 @@ const QUERY = (account: string) => `{
   }`;
 
 // @ts-ignore TYPE NEEDS FIXING
-const fetcher = (query) => request(bountyMakerSubgraph, query);
 
 interface hunter {
   id: string;
@@ -42,6 +41,7 @@ interface hunter {
   }[];
 }
 const useHunterInfo = (account: string): hunter | undefined => {
+  const fetcher = (query: any) => request(bountyMakerSubgraph, query);
   const { data } = useSWR(QUERY(account), fetcher);
   if (data?.hunters[0]) {
     const { id, rewardWon, rewardClaimed, winCount, winClaimed, wins } =

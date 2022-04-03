@@ -17,16 +17,24 @@ const Home: NextPage = () => {
         </h1>
         <p className={"text-base text-center text-black-500"}>
           BountyHunt is a decentralized, open-source, peer-to-peer,
-          decentralized bounty-hunting platform.
+          bounty-hunting platform.
         </p>
-        <Button
-          onClick={() => {
-            router.push("/bounties");
-          }}
-          className="mt-6"
-        >
-          Look For a Bounty
-        </Button>
+        <div className="flex w-full max-w-[300px] justify-between">
+          <Button
+            onClick={() => {
+              router.push("/bounties");
+            }}
+            className="mt-6"
+          >
+            Look For a Bounty
+          </Button>
+          <Button
+            onClick={() => window.open("https://discord.gg/HrW3s7qh")}
+            className="mt-6"
+          >
+            Join Discord
+          </Button>
+        </div>
       </div>
     </div>
   );

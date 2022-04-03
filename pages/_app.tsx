@@ -38,11 +38,12 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
           </title>
         </Head>
         <button
-          onClick={() => window.open("")}
-          className="fixed left-0 bottom-5 p-2 bg-red-500 text-white-100 font-bold rounded-r-lg"
+          onClick={() => window.open("https://forms.gle/r3PJt3fvAohjZoZj9")}
+          className="fixed left-0 bottom-5 p-2 border-2 border-yellow-300 bg-red-500 text-white-100 font-bold rounded-r-lg"
         >
-          Bug Report
+          ✨ Bug Bounty ✨
         </button>
+
         {children}
       </AppProvider>
     </>

@@ -6,7 +6,7 @@ import Button from "../../components/Button";
 import { useBounty } from "../../state/bounties/hook";
 import { retrieve } from "../../utils/storeFile";
 const imageStr =
-  "https://superteam.fun/_next/image?url=https%3A%2F%2Fsuper-static-assets.s3.amazonaws.com%2F75e99297-73de-4946-ba6b-0ac603638793%2Fimages%2F1b3b7fef-bdd1-4b92-993e-c9f0676a995d.png&w=1920&q=80";
+  "https://raw.githubusercontent.com/Jds-23/laughing-broccoli/main/default.jpeg";
 
 const Bounty = () => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const Bounty = () => {
   return (
     <div>
       <img
-        src={bounty ? bounty?.image : imageStr}
+        src={bounty?.image ? bounty?.image : imageStr}
         className="object-cover w-full h-56"
       />
       <div className="mx-4 mt-3.5 md:mx-16 lg:mx-32 lg:mt-7">

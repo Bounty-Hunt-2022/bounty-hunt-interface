@@ -24,7 +24,7 @@ const Bounty = () => {
     useWallet();
 
   useEffect(() => {
-    if (bounty && winners?.length !== bounty.tokenLimit) {
+    if (bounty && winners?.length !== bounty?.tokenLimit) {
       let lenght = bounty.tokenLimit;
       const winners = [];
       const addressCheck = [];

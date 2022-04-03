@@ -152,92 +152,88 @@ export function useAdminBounties(account: string | undefined | null): {
       )
     : [];
 }
-
-export function useBounty(id: string):
-  | undefined
-  | {
-      id: string;
-      reward: number;
-      rewards: number[];
-      tokenLimit: number;
-      deadline: string;
-      uri: string;
-      company: string;
-      title?: string;
-      type?: string;
-      image: string;
-      active: boolean;
-      admin: string;
-    } {
-  const { data } = useSWR(QUERY, fetcher);
-  const bounty: {
-    id: string;
-    active: boolean;
-    rewards: string[];
-    uri: string;
-    tokenLimit: string;
-    deadline: string;
-    admin: string;
-  } = data?.bounties?.find(
-    (bounty: {
-      id: string;
-      active: boolean;
-      rewards: string[];
-      uri: string;
-      tokenLimit: string;
-      deadline: string;
-      admin: string;
-    }) => bounty.id === id
-  );
-  const [ipfsMetadata, setIpfsMetadata] = useState<any>();
-  useEffect(() => {
-    const load = async () => {
-      if (!isIPFS.cid(bounty?.id)) return undefined;
-      const res = await retrieve(bounty?.id);
-      setIpfsMetadata(res);
-    };
-    load();
-  }, [bounty]);
-  if (bounty) {
-    const reward = bounty.rewards.reduce(
-      (partialSum, a) => partialSum + parseFloat(a),
-      0
-    );
-    // // const metadataFromIpfs:
-    //   | {
-    //       about?: string;
-    //       submissionLink?: string;
-    //       title?: string;
-    //     }
-    //   | undefined = await fetchMetadata(bounty.id);
-    return useMemo(() => {
-      if (!ipfsMetadata)
-        return {
-          ...metadata[bounty.admin],
-          id: bounty.id,
-          reward,
-          rewards: bounty.rewards.map((a) => parseFloat(a)),
-          tokenLimit: parseFloat(bounty.tokenLimit),
-          deadline: bounty.deadline,
-          uri: bounty.uri,
-          active: bounty.active,
-          admin: bounty.admin,
-          type: "",
-        };
-      else
-        return {
-          ...ipfsMetadata,
-          ...metadata[bounty.admin],
-          id: bounty.id,
-          reward,
-          rewards: bounty.rewards.map((a) => parseFloat(a)),
-          tokenLimit: parseFloat(bounty.tokenLimit),
-          deadline: bounty.deadline,
-          uri: bounty.uri,
-          active: bounty.active,
-          admin: bounty.admin,
-        };
-    }, [bounty]);
-  }
-  return undefined;
+export function useBounty(id: string) {
+  const bounties = useBounties();
+  return bounties?.filter((bounties) => bounties.id === id)[0];
 }
+// export function useBounty(id: string):
+//   | undefined
+//   | {
+//       id: string;
+//       reward: number;
+//       rewards: number[];
+//       tokenLimit: number;
+//       deadline: string;
+//       uri: string;
+//       company: string;
+//       title?: string;
+//       type?: string;
+//       image: string;
+//       active: boolean;
+//       admin: string;
+//     } {
+//   const { data } = useSWR(QUERY, fetcher);
+//   const bounty: {
+//     id: string;
+//     active: boolean;
+//     rewards: string[];
+//     uri: string;
+//     tokenLimit: string;
+//     deadline: string;
+//     admin: string;
+//   } = data?.bounties?.find(
+//     (bounty: {
+//       id: string;
+//       active: boolean;
+//       rewards: string[];
+//       uri: string;
+//       tokenLimit: string;
+//       deadline: string;
+//       admin: string;
+//     }) => bounty.id === id
+//   );
+//   const [ipfsMetadata, setIpfsMetadata] = useState<any>();
+//   useEffect(() => {
+//     const load = async () => {
+//       if (!isIPFS.cid(bounty?.id)) return undefined;
+//       const res = await retrieve(bounty?.id);
+//       setIpfsMetadata(res);
+//     };
+//     load();
+//   }, [bounty]);
+//   if (bounty) {
+//     const reward = bounty?.rewards.reduce(
+//       (partialSum, a) => partialSum + parseFloat(a),
+//       0
+//     );
+
+//     return useMemo(() => {
+//       if (!ipfsMetadata)
+//         return {
+//           ...metadata[bounty.admin],
+//           id: bounty.id,
+//           reward,
+//           rewards: bounty.rewards.map((a) => parseFloat(a)),
+//           tokenLimit: parseFloat(bounty.tokenLimit),
+//           deadline: bounty.deadline,
+//           uri: bounty.uri,
+//           active: bounty.active,
+//           admin: bounty.admin,
+//           type: "",
+//         };
+//       else
+//         return {
+//           ...ipfsMetadata,
+//           ...metadata[bounty.admin],
+//           id: bounty.id,
+//           reward,
+//           rewards: bounty.rewards.map((a) => parseFloat(a)),
+//           tokenLimit: parseFloat(bounty.tokenLimit),
+//           deadline: bounty.deadline,
+//           uri: bounty.uri,
+//           active: bounty.active,
+//           admin: bounty.admin,
+//         };
+//     }, [bounty]);
+//   }
+// }
