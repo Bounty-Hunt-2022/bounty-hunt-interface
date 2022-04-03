@@ -9,6 +9,8 @@ import { isAddress } from "ethers/lib/utils";
 import { getEllipsisTxt } from "../../utils";
 import useHunterInfo from "../../state/hunter/hook";
 import BountyClaimCard from "../../components/BountyClaimCard";
+import Link from "next/link";
+import Button from "../../components/Button";
 
 const web3 = createAlchemyWeb3(
   `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
@@ -25,21 +27,29 @@ const Hunter = () => {
   const hunterSubgraphData = useHunterInfo(address ?? "");
   const [profileNft, setProfileNft] = useState<any>();
 
+  const [loading, setLoading] = useState<string | undefined>();
+
   const { account, web3Provider } = useWallet();
   const fetchAddress = useCallback(async () => {
     try {
       if (slug) {
-        const signer = web3Provider.getSigner();
+        // const signer = web3Provider.getSigner();
+        setLoading("fetching-address");
         const contract = new ethers.Contract(
           hunterDomainAddress,
           DomainMaker,
-          signer
+          web3Provider
         );
         const name = slug as string;
         const owner = await contract.domains(name.replace(".hunter", ""));
-        setAddress(owner);
-        setIsHunterDomain(true);
-        fetchHunterMetadata();
+        if (isAddress(owner) && ethers.constants.AddressZero !== owner) {
+          setLoading(undefined);
+          setAddress(owner);
+          setIsHunterDomain(true);
+          fetchHunterMetadata();
+        } else {
+          setLoading("invalid-domain");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -105,9 +115,23 @@ const Hunter = () => {
   console.log(hunterSubgraphData);
   return (
     <div className="mx-4 mt-16 sm:mt-32 sm:mx-10 md:mx-40">
-      {/* Hi {slug as string}, your address is: {address as string} */}
+      {loading === "fetching-address" && (
+        <h3 className=" text-2xl text-primary-500 font-bold mt-3 border-b-2 border-primary-500">
+          Fetching Hunter Address
+        </h3>
+      )}
+      {loading === "invalid-domain" && (
+        <div className="flex flex-col justify-center">
+          <h3 className=" text-2xl text-primary-500 font-bold my-3 border-b-2 border-primary-500">
+            Invalid Domain
+          </h3>
+          <Link href={"/createProfile"}>
+            <Button>Get this Domain</Button>
+          </Link>
+        </div>
+      )}
       {profileNft && (
-        <div className="rounded-lg w-fit mb-6 md:mb-12">
+        <div className="rounded-lg w-fit ">
           <img
             className="max-w-[150px] rounded-md border-solid border-2"
             src={profileNft.media[0]?.gateway}
@@ -164,23 +188,24 @@ const Hunter = () => {
               </a>
             )}
           </div>
-          <div className="flex mt-2">
-            <div className="mr-4">
-              <p className="text-primary-500 font-semibold ">Wins</p>
-              <p className="text-secondary-500 text-sm uppercase">
-                {hunterSubgraphData?.winCount ?? 0}
-              </p>
-            </div>
-            <div className="mr-4">
-              <p className="text-primary-500 font-semibold ">Reward won</p>
-              <p className="text-secondary-500 text-sm uppercase">
-                ${hunterSubgraphData?.rewardWon ?? 0}
-              </p>
-            </div>
+        </div>
+      )}
+      {hunterSubgraphData && (
+        <div className="flex mt-2 mb-6">
+          <div className="mr-4">
+            <p className="text-primary-500 font-semibold ">Wins</p>
+            <p className="text-secondary-500 text-sm uppercase">
+              {hunterSubgraphData?.winCount ?? 0}
+            </p>
+          </div>
+          <div className="mr-4">
+            <p className="text-primary-500 font-semibold ">Reward won</p>
+            <p className="text-secondary-500 text-sm uppercase">
+              ${hunterSubgraphData?.rewardWon ?? 0}
+            </p>
           </div>
         </div>
       )}
-
       {account === address &&
         Number(hunterSubgraphData?.winClaimed ?? "0") > 0 && (
           <>
@@ -200,9 +225,11 @@ const Hunter = () => {
             </div>
           </>
         )}
-      <h3 className=" text-2xl text-primary-500 font-bold mt-3 border-b-2 border-primary-500">
-        NFTs won
-      </h3>
+      {nfts[0] && (
+        <h3 className=" text-2xl text-primary-500 font-bold mt-3 border-b-2 border-primary-500">
+          NFTs won
+        </h3>
+      )}
       <div className="grid grid-cols-1 gap-y-3 gap-x-3 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-4 mt-4">
         {nfts?.map((nft, i) => (
           <div

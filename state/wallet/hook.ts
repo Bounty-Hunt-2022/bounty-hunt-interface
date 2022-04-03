@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useAppContext } from "../../context/StateProvider";
 import { ActionTypes } from "../../reducer";
-import { providers } from "ethers";
+import { ethers, providers } from "ethers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { networkConfigs } from "../../constants/network";
@@ -67,6 +67,16 @@ const useWallet = () => {
   useEffect(() => {
     if (web3Modal.cachedProvider) {
       connect();
+    } else {
+      const rpcProvider = new ethers.providers.JsonRpcProvider(
+        "https://rpc-mumbai.maticvigil.com"
+      );
+      dispatch({
+        type: ActionTypes.initialWeb3Provider,
+        payload: {
+          web3Provider: rpcProvider,
+        },
+      });
     }
   }, []);
   // useEffect(() => {

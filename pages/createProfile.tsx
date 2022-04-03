@@ -7,16 +7,6 @@ import DomainMaker from "../constants/abis/DomainMaker.json";
 import useWallet from "../state/wallet/hook";
 import { jsonFile, storeFile } from "../utils/storeFile";
 
-const profile = {
-  name: "Joydeep",
-  bio: "I am a software engineer",
-  email: "joydeepsingha68@gmail.com",
-  live: "Kolkata, India",
-  hunterType: ["", "", ""],
-  twitter: "",
-  link: "",
-};
-
 export interface generalInfo {
   name: string;
   bio: string;
